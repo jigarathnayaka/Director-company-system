@@ -1,0 +1,154 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f4f6f8;
+  color: #1f2937;
+}
+
+.app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+header {
+  margin-bottom: 24px;
+}
+
+header h1 {
+  margin: 0 0 8px;
+  font-size: 30px;
+}
+
+header p {
+  margin: 0;
+  color: #6b7280;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 20px;
+}
+
+.card {
+  background: white;
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+.card h2 {
+  margin-top: 0;
+  font-size: 20px;
+}
+
+.muted {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+input[type="file"] {
+  width: 100%;
+  padding: 12px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  background: #f8fafc;
+}
+
+button {
+  cursor: pointer;
+}
+
+form button {
+  width: 100%;
+  border: none;
+  background: #111827;
+  color: white;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+form button:disabled {
+  background: #9ca3af;
+}
+
+.message {
+  margin-bottom: 0;
+  font-size: 14px;
+}
+
+.director-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.director-item {
+  text-align: left;
+  border: 1px solid #e5e7eb;
+  background: white;
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.director-item.active {
+  border-color: #111827;
+  background: #f9fafb;
+}
+
+.director-item strong,
+.director-item span,
+.director-item small {
+  display: block;
+}
+
+.director-item span {
+  margin-top: 4px;
+  color: #4b5563;
+  font-size: 13px;
+}
+
+.director-item small {
+  margin-top: 6px;
+  color: #6b7280;
+}
+
+.profile-box {
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.profile-box h3 {
+  margin-top: 0;
+}
+
+.company-list {
+  display: grid;
+  gap: 12px;
+}
+
+.company-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.company-card h3 {
+  margin-top: 0;
+}
+
+@media (max-width: 850px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
