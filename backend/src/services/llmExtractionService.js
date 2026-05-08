@@ -67,9 +67,12 @@ Rules:
 - Do not invent missing data.
 - If a value is missing, use null.
 - id_number can be NIC, passport number, national ID, or another legal ID.
-- Extract directors from sections like INITIAL DIRECTORS, DIRECTORS, or similar.
+- Extract all current directors/secretaries mentioned in the notice.
+- Include people from sections like INITIAL DIRECTORS, DIRECTORS, APPOINTMENT OF NEW DIRECTORS/SECRETARIES,
+  and NAMES AND RESIDENTIAL ADDRESS OF EVERY PERSON WHO IS A DIRECTOR/SECRETARY.
 - Preserve names as close as possible to the document.
 - Company name should come from labels like Name of Proposed Company, Company Name, Name of Company, or similar.
+- role should be "Director" or "Secretary" when indicated; default to "Director" if unclear.
 
 OCR TEXT:
 ${ocrText}

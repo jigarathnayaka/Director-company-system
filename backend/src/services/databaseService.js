@@ -183,6 +183,25 @@ export async function getAllDirectors() {
   return result.rows;
 }
 
+export async function getAllCompanies() {
+  const result = await query(
+    `
+    SELECT
+      c.id,
+      c.company_name,
+      c.registration_no,
+      c.company_address,
+      COUNT(cd.director_id) AS director_count
+    FROM companies c
+    LEFT JOIN company_directors cd ON c.id = cd.company_id
+    GROUP BY c.id
+    ORDER BY c.company_name ASC
+    `
+  );
+
+  return result.rows;
+}
+
 export async function getCompaniesByDirector(directorId) {
   const directorResult = await query(
     `
@@ -211,8 +230,128 @@ export async function getCompaniesByDirector(directorId) {
     [directorId]
   );
 
+  const companyIds = companiesResult.rows.map((row) => row.id);
+  let boardMembersByCompany = {};
+
+  if (companyIds.length > 0) {
+    const boardResult = await query(
+      `
+      SELECT
+        cd.company_id,
+        d.id,
+        d.director_name,
+        d.id_number,
+        d.director_address,
+        d.email,
+        cd.role
+      FROM company_directors cd
+      JOIN directors d ON cd.director_id = d.id
+      WHERE cd.company_id = ANY($1::int[])
+      ORDER BY d.director_name ASC
+      `,
+      [companyIds]
+    );
+
+    boardMembersByCompany = boardResult.rows.reduce(
+      (acc, member) => {
+        if (!acc[member.company_id]) {
+          acc[member.company_id] = [];
+        }
+
+        acc[member.company_id].push({
+          id: member.id,
+          director_name: member.director_name,
+          id_number: member.id_number,
+          director_address: member.director_address,
+          email: member.email,
+          role: member.role || "Director"
+        });
+
+        return acc;
+      },
+      {}
+    );
+  }
+
   return {
     director: directorResult.rows[0] || null,
-    companies: companiesResult.rows
+    companies: companiesResult.rows.map((company) => ({
+      ...company,
+      board_members: boardMembersByCompany[company.id] || []
+    }))
+  };
+}
+
+export async function getCompanyDetails(companyId) {
+  const companyResult = await query(
+    `
+    SELECT id, company_name, registration_no, company_address
+    FROM companies
+    WHERE id = $1
+    `,
+    [companyId]
+  );
+
+  const directorsResult = await query(
+    `
+    SELECT
+      d.id,
+      d.director_name,
+      d.id_number,
+      d.director_address,
+      d.email,
+      cd.role
+    FROM company_directors cd
+    JOIN directors d ON cd.director_id = d.id
+    WHERE cd.company_id = $1
+    ORDER BY d.director_name ASC
+    `,
+    [companyId]
+  );
+
+  const directorIds = directorsResult.rows.map((row) => row.id);
+  let otherCompaniesByDirector = {};
+
+  if (directorIds.length > 0) {
+    const otherCompaniesResult = await query(
+      `
+      SELECT
+        cd.director_id,
+        c.id,
+        c.company_name,
+        c.registration_no
+      FROM company_directors cd
+      JOIN companies c ON cd.company_id = c.id
+      WHERE cd.director_id = ANY($1::int[])
+        AND cd.company_id <> $2
+      ORDER BY c.company_name ASC
+      `,
+      [directorIds, companyId]
+    );
+
+    otherCompaniesByDirector = otherCompaniesResult.rows.reduce(
+      (acc, row) => {
+        if (!acc[row.director_id]) {
+          acc[row.director_id] = [];
+        }
+
+        acc[row.director_id].push({
+          id: row.id,
+          company_name: row.company_name,
+          registration_no: row.registration_no
+        });
+
+        return acc;
+      },
+      {}
+    );
+  }
+
+  return {
+    company: companyResult.rows[0] || null,
+    directors: directorsResult.rows.map((director) => ({
+      ...director,
+      other_companies: otherCompaniesByDirector[director.id] || []
+    }))
   };
 }

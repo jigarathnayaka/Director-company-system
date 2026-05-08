@@ -1,12 +1,27 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap");
+
+:root {
+  --bg: #eef2f4;
+  --bg-accent: #dbe7ef;
+  --card: #ffffff;
+  --ink: #111827;
+  --muted: #5f6b7a;
+  --brand: #0f172a;
+  --outline: #e2e8f0;
+  --shadow: 0 14px 30px rgba(15, 23, 42, 0.08);
+}
+
 * {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f4f6f8;
-  color: #1f2937;
+  font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+  background: linear-gradient(135deg, var(--bg) 0%, #f8fafc 55%, var(--bg-accent) 100%);
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.5;
 }
 
 .app {
@@ -17,49 +32,60 @@ body {
 
 header {
   margin-bottom: 24px;
+  padding: 20px 22px;
+  border-radius: 18px;
+  background: #ffffffcc;
+  backdrop-filter: blur(6px);
+  box-shadow: var(--shadow);
 }
 
 header h1 {
-  margin: 0 0 8px;
-  font-size: 30px;
+  margin: 0 0 6px;
+  font-size: 24px;
+  font-family: "Space Grotesk", "IBM Plex Sans", sans-serif;
+  letter-spacing: -0.3px;
 }
 
 header p {
   margin: 0;
-  color: #6b7280;
+  color: var(--muted);
 }
 
 .layout {
   display: grid;
-  grid-template-columns: 360px 1fr;
-  gap: 20px;
+  grid-template-columns: 340px 1fr;
+  gap: 18px;
 }
 
 .card {
-  background: white;
-  border-radius: 14px;
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+  background: var(--card);
+  border-radius: 16px;
+  padding: 18px;
+  margin-bottom: 18px;
+  border: 1px solid var(--outline);
+  box-shadow: var(--shadow);
 }
 
 .card h2 {
   margin-top: 0;
-  font-size: 20px;
+  font-size: 17px;
+  font-family: "Space Grotesk", "IBM Plex Sans", sans-serif;
+  letter-spacing: -0.2px;
 }
 
 .muted {
-  color: #6b7280;
-  font-size: 14px;
+  color: var(--muted);
+  font-size: 12px;
 }
 
 input[type="file"] {
   width: 100%;
-  padding: 12px;
+  padding: 10px 12px;
   border: 1px dashed #cbd5e1;
-  border-radius: 10px;
+  border-radius: 12px;
   margin-bottom: 12px;
   background: #f8fafc;
+  font-size: 12px;
 }
 
 button {
@@ -69,11 +95,13 @@ button {
 form button {
   width: 100%;
   border: none;
-  background: #111827;
+  background: var(--brand);
   color: white;
-  padding: 12px 16px;
-  border-radius: 10px;
-  font-weight: bold;
+  padding: 11px 14px;
+  border-radius: 12px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  font-size: 13px;
 }
 
 form button:disabled {
@@ -82,7 +110,7 @@ form button:disabled {
 
 .message {
   margin-bottom: 0;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .director-list {
@@ -93,15 +121,21 @@ form button:disabled {
 
 .director-item {
   text-align: left;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--outline);
   background: white;
   border-radius: 12px;
   padding: 12px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.director-item:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
 }
 
 .director-item.active {
-  border-color: #111827;
-  background: #f9fafb;
+  border-color: var(--brand);
+  background: #f1f5f9;
 }
 
 .director-item strong,
@@ -113,19 +147,20 @@ form button:disabled {
 .director-item span {
   margin-top: 4px;
   color: #4b5563;
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .director-item small {
   margin-top: 6px;
-  color: #6b7280;
+  color: var(--muted);
 }
 
 .profile-box {
-  background: #f9fafb;
-  border-radius: 12px;
+  background: #f8fafc;
+  border-radius: 14px;
   padding: 16px;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
+  border: 1px solid #e2e8f0;
 }
 
 .profile-box h3 {
@@ -138,13 +173,68 @@ form button:disabled {
 }
 
 .company-card {
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--outline);
   border-radius: 12px;
   padding: 16px;
+  background: #ffffff;
 }
 
 .company-card h3 {
   margin-top: 0;
+  font-family: "Space Grotesk", "IBM Plex Sans", sans-serif;
+  font-size: 16px;
+}
+
+.director-details-list {
+  display: grid;
+  gap: 12px;
+}
+
+.director-detail-card {
+  border: 1px solid var(--outline);
+  border-radius: 12px;
+  padding: 16px;
+  background: #ffffff;
+  position: relative;
+}
+
+.director-detail-card h3 {
+  margin-top: 0;
+}
+
+.other-company-indicator {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 14px;
+  height: 10px;
+  background: #16a34a;
+  border-radius: 2px 2px 2px 0;
+  box-shadow: 0 0 0 2px #dcfce7;
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 50% 100%, 0 70%);
+}
+
+.other-companies {
+  margin-top: 12px;
+}
+
+.other-companies summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+@media (max-width: 850px) {
+  header {
+    padding: 16px;
+  }
+
+  header h1 {
+    font-size: 20px;
+  }
+
+  .layout {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 850px) {

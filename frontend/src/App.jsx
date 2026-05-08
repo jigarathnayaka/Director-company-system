@@ -2,35 +2,41 @@ import { useEffect, useState } from "react";
 import { api } from "./api/client";
 
 import FileUpload from "./components/FileUpload";
-import DirectorsList from "./components/DirectorsList";
+import CompaniesList from "./components/CompaniesList";
 import DirectorCompanies from "./components/DirectorCompanies";
+import CompanyDetails from "./components/CompanyDetails";
 
 import "./styles.css";
 
 export default function App() {
-  const [directors, setDirectors] = useState([]);
+  const [companies, setCompanies] = useState([]);
   const [selectedDirectorId, setSelectedDirectorId] =
     useState(null);
   const [directorCompanyData, setDirectorCompanyData] =
     useState(null);
-  const [loadingDirectors, setLoadingDirectors] =
+  const [companyData, setCompanyData] = useState(null);
+  const [selectedCompanyId, setSelectedCompanyId] =
+    useState(null);
+  const [loadingCompanies, setLoadingCompanies] =
     useState(false);
 
-  async function fetchDirectors() {
-    setLoadingDirectors(true);
+  async function fetchCompanies() {
+    setLoadingCompanies(true);
 
     try {
-      const response = await api.get("/directors");
-      setDirectors(response.data.data || []);
+      const response = await api.get("/companies");
+      setCompanies(response.data.data || []);
     } catch (error) {
-      console.error("Failed to load directors", error);
+      console.error("Failed to load companies", error);
     } finally {
-      setLoadingDirectors(false);
+      setLoadingCompanies(false);
     }
   }
 
   async function fetchDirectorCompanies(id) {
     setSelectedDirectorId(id);
+    setSelectedCompanyId(null);
+    setCompanyData(null);
 
     try {
       const response = await api.get(
@@ -43,12 +49,30 @@ export default function App() {
     }
   }
 
+  async function fetchCompanyDetails(id) {
+    setSelectedCompanyId(id);
+    setSelectedDirectorId(null);
+    setDirectorCompanyData(null);
+
+    try {
+      const response = await api.get(`/companies/${id}`);
+      setCompanyData(response.data.data);
+    } catch (error) {
+      console.error("Failed to load company details", error);
+    }
+  }
+
   useEffect(() => {
-    fetchDirectors();
+    fetchCompanies();
   }, []);
 
-  async function handleUploadSuccess() {
-    await fetchDirectors();
+  async function handleUploadSuccess(uploadData) {
+    await fetchCompanies();
+
+    const uploadedCompanyId = uploadData?.company?.id;
+    if (uploadedCompanyId) {
+      await fetchCompanyDetails(uploadedCompanyId);
+    }
   }
 
   return (
@@ -67,19 +91,23 @@ export default function App() {
             onUploadSuccess={handleUploadSuccess}
           />
 
-          {loadingDirectors ? (
-            <div className="card">Loading directors...</div>
+          {loadingCompanies ? (
+            <div className="card">Loading companies...</div>
           ) : (
-            <DirectorsList
-              directors={directors}
-              selectedDirectorId={selectedDirectorId}
-              onSelect={fetchDirectorCompanies}
+            <CompaniesList
+              companies={companies}
+              selectedCompanyId={selectedCompanyId}
+              onSelect={fetchCompanyDetails}
             />
           )}
         </section>
 
         <section className="right-panel">
-          <DirectorCompanies data={directorCompanyData} />
+          {companyData ? (
+            <CompanyDetails data={companyData} />
+          ) : (
+            <DirectorCompanies data={directorCompanyData} />
+          )}
         </section>
       </main>
     </div>

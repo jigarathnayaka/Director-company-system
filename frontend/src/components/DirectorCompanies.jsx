@@ -65,6 +65,22 @@ export default function DirectorCompanies({ data }) {
               <strong>Source Document:</strong>{" "}
               {company.source_document || "Not available"}
             </p>
+
+            <div className="board-members">
+              <strong>Board Members:</strong>
+              {company.board_members?.length ? (
+                <ul>
+                  {company.board_members.map((member) => (
+                    <li key={member.id}>
+                      {member.director_name}
+                      {member.role ? ` (${member.role})` : ""}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="muted">No board members found.</p>
+              )}
+            </div>
           </div>
         ))}
       </div>
